@@ -128,6 +128,55 @@ public:
     Graph(int n);
 };
 
+// this function returns the degree of node i 
+int Graph::Degree(int i){
+    
+    int degree = 0;
+
+    for(int j = 0; j < size; j++){
+        if(m[i][j] != 0) degree++; 
+    }
+
+    return degree;
+}
+
+//Add
+void Graph::Add(int i, int j, int w){
+    m[i][j] = w;
+}
+
+//Is edge
+int Graph::IsEdge(int i, int j){
+    if(m[i][j] != 0) return 1;
+    else return 0;
+}
+
+// this function returns 1 if there is a path 
+// from node i to node j and returns 0 otherwise.  
+int Graph::IsPath(int i, int j){
+
+}
+
+//Constructor
+Graph::Graph(int n){
+    size = n;
+
+    //allocate space for array of int pointers
+    m = new int*[size];
+
+    //for each pointer allocate an array
+    for(int i = 0; i < size; i++){
+        m[i] = new int[size];
+    }
+
+    //initialize all values to 0
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j < size ; j++){
+            m[i][j] = 0;
+        }
+    }
+}
+
 
 int main()
 {
@@ -186,6 +235,10 @@ int main()
         for (int i = 0; i < z->length; i++) {
             cout << z->path[i];
         }
+    }
+    // Mode 6: test personal
+    else if (mode == 6) {
+
     }
 
     return 0;
