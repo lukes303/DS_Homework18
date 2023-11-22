@@ -170,32 +170,32 @@ int Graph::IsPath(int i, int j){
 int* Graph::DFT(int i){
 
     // Create an array to store the traversal sequence
-    cout << "CREATING TRAVERSAL SEQUENCE" << endl;
+    //cout << "CREATING TRAVERSAL SEQUENCE" << endl;
     int* traversalSequence = new int[size];
 
     // Create a boolean array to keep track of visited vertices
-    cout << "CREATING VISITED ARRAY" << endl;
+    //cout << "CREATING VISITED ARRAY" << endl;
     bool* visited = new bool[size];
 
     // Initialize all vertices as not visited
-    cout << "INITIALIZING VISITED ARRAY" << endl;
-    for(int k = 0; k < size; ++k) {
+    //cout << "INITIALIZING VISITED ARRAY" << endl;
+    for(int k = 0; k < size; k++) {
         visited[k] = false;
     }
 
-    cout << "CREATING STACK" << endl;
+    //cout << "CREATING STACK" << endl;
     // Create a stack for iterative traversal
     std::stack<int> stack;
 
-    cout << "PUSHING I ONTO STACK" << endl;
+    //cout << "PUSHING I ONTO STACK" << endl;
     // Push the i onto the stack
     stack.push(i);
 
-    cout << "CREATING COUNTER" << endl;
+    //cout << "CREATING COUNTER" << endl;
     // Counter to keep track of the number of visited vertices
     int count = 0;
 
-    cout << "STARTING WHILE LOOP" << endl;
+    //cout << "STARTING WHILE LOOP" << endl;
     // Iterative Depth-First Traversal using a stack
     while(!stack.empty()) {
         
@@ -203,7 +203,7 @@ int* Graph::DFT(int i){
         int currentVertex = stack.top();
         stack.pop();
 
-        cout << "CURRENT VERTEX: " << currentVertex << endl;
+        //cout << "CURRENT VERTEX: " << currentVertex << endl;
 
         // Process the current vertex if not visited
         if(!visited[currentVertex]) {
@@ -214,7 +214,6 @@ int* Graph::DFT(int i){
 
             // Push adjacent vertecies onto the stack from largest to lowest
             for(int j = size - 1; j >= 0; j--){
-                cout << j << endl;
                 if(m[currentVertex][j] != 0 && !visited[j]){
                     stack.push(j);
                 }
@@ -320,7 +319,6 @@ int main()
     }
     // Mode 3: test DFT()
     else if (mode == 3) {
-        cout << "TESTING 3" << endl;
         int* s = new int[size];
         s = x.DFT(a);
         for (int i = 0; i < size; i++) {
