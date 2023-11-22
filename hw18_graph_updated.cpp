@@ -23,6 +23,8 @@
 // 
 
 #include <iostream>
+#include <stack>
+#include <vector>
 using namespace std;
 
 class Result {
@@ -73,7 +75,6 @@ public:
     // this function returns 1 if there is a path 
     // from node i to node j and returns 0 otherwise.  
     int IsPath(int i, int j);
-
 
     // this function performs depth-first search 
     // starting at node i. break any tie based on 
@@ -132,8 +133,9 @@ public:
 int Graph::Degree(int i){
     
     int degree = 0;
+    int k,j;
 
-    for(int j = 0; j < size; j++){
+    for(j = 0; j < size; j++){
         if(m[i][j] != 0) degree++; 
     }
 
@@ -143,6 +145,7 @@ int Graph::Degree(int i){
 //Add
 void Graph::Add(int i, int j, int w){
     m[i][j] = w;
+    m[j][i] = w;
 }
 
 //Is edge
@@ -154,7 +157,111 @@ int Graph::IsEdge(int i, int j){
 // this function returns 1 if there is a path 
 // from node i to node j and returns 0 otherwise.  
 int Graph::IsPath(int i, int j){
+    return 0;
+}
 
+// this function performs depth-first search 
+// starting at node i. break any tie based on 
+// node number (smaller node goes first) e.g., 
+// if you can pick node 2 or node 3, pick 2. 
+// at last, this function should return an array 
+// of size n holding the traverse sequence of nodes. 
+// (Assume input graph is always connected.)
+int* Graph::DFT(int i){
+
+    // Create an array to store the traversal sequence
+    cout << "CREATING TRAVERSAL SEQUENCE" << endl;
+    int* traversalSequence = new int[size];
+
+    // Create a boolean array to keep track of visited vertices
+    cout << "CREATING VISITED ARRAY" << endl;
+    bool* visited = new bool[size];
+
+    // Initialize all vertices as not visited
+    cout << "INITIALIZING VISITED ARRAY" << endl;
+    for(int k = 0; k < size; ++k) {
+        visited[k] = false;
+    }
+
+    cout << "CREATING STACK" << endl;
+    // Create a stack for iterative traversal
+    std::stack<int> stack;
+
+    cout << "PUSHING I ONTO STACK" << endl;
+    // Push the i onto the stack
+    stack.push(i);
+
+    cout << "CREATING COUNTER" << endl;
+    // Counter to keep track of the number of visited vertices
+    int count = 0;
+
+    cout << "STARTING WHILE LOOP" << endl;
+    // Iterative Depth-First Traversal using a stack
+    while(!stack.empty()) {
+        
+        // Get the current vertex from the stack
+        int currentVertex = stack.top();
+        stack.pop();
+
+        cout << "CURRENT VERTEX: " << currentVertex << endl;
+
+        // Process the current vertex if not visited
+        if(!visited[currentVertex]) {
+            // Mark the current vertex as visted
+            visited[currentVertex] = true;
+            // Store the current vertex in the traversal sequence
+            traversalSequence[count++] = currentVertex;
+
+            // Push adjacent vertecies onto the stack from largest to lowest
+            for(int j = size - 1; j >= 0; j--){
+                cout << j << endl;
+                if(m[currentVertex][j] != 0 && !visited[j]){
+                    stack.push(j);
+                }
+            }
+        }
+    }
+
+    delete[] visited;
+
+    return traversalSequence;
+}
+
+
+// this function performs breadth-first search 
+// starting at node i. when exploring neighbors 
+// of a set of nodes, explore them based on the 
+// order of nodes in the queue. 
+// 
+// this means once you pop a node from the queue, 
+// add its neighbors to the queue. (here, break 
+// ties based on neighbor node numbers -- smaller 
+// node gets added to the queue first)
+// 
+// at last, this function should return an array 
+// of size n holding the traverse sequence of nodes. 
+int* Graph::BFT(int i){
+    return NULL;
+}
+
+// 
+// The following performs the Dijkstra's algorithm
+// to find the shorest path from node i to node j.  
+// 
+// It returns address of an object of the 
+// Result class, which contains three 
+// public variables (see definition at top): 
+// (i) int length: length of the shorest path 
+// (ii) int weight: total weight of the shortest path
+// (iii) int *path: array of nodes on the path 
+// Example: 
+// If the shortest path is 2 -> 3 -> 0, and 
+// weight on (2,3) is 5 and weight on (3,0) is 1, 
+// then path[0] = 2, path[1] = 3, path[2] = 0
+// and length = 3 and weight = 6. 
+// 
+Result* Graph::Dijkstra(int i, int j){
+    return NULL;
 }
 
 //Constructor
@@ -213,6 +320,7 @@ int main()
     }
     // Mode 3: test DFT()
     else if (mode == 3) {
+        cout << "TESTING 3" << endl;
         int* s = new int[size];
         s = x.DFT(a);
         for (int i = 0; i < size; i++) {
