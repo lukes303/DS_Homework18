@@ -24,7 +24,8 @@
 
 #include <iostream>
 #include <stack>
-#include <vector>
+#include <queue>
+#include <climits>
 using namespace std;
 
 class Result {
@@ -32,7 +33,14 @@ public:
     int length; 
     int weight;
     int* path;
+    Result(int l, int w, int* p);
 };
+
+Result::Result(int l, int w, int* p){
+    length = l;
+    weight = w;
+    path = p;
+}
 
 // Please omplete the graph class. 
 // Remember this is an undirected graph 
@@ -129,7 +137,7 @@ public:
     Graph(int n);
 };
 
-// this function returns the degree of node i 
+// This function returns the degree of node i 
 int Graph::Degree(int i){
     
     int degree = 0;
@@ -142,31 +150,32 @@ int Graph::Degree(int i){
     return degree;
 }
 
-//Add
+// Add
 void Graph::Add(int i, int j, int w){
     m[i][j] = w;
     m[j][i] = w;
 }
 
-//Is edge
+// Is edge
 int Graph::IsEdge(int i, int j){
     if(m[i][j] != 0) return 1;
     else return 0;
 }
 
-// this function returns 1 if there is a path 
-// from node i to node j and returns 0 otherwise.  
+// Is path  
 int Graph::IsPath(int i, int j){
+    
+    //Use BFT to determine path
+    int* BFTSequence = BFT(i);
+
+    for(int k = 0; k < size; k++){
+        if(BFTSequence[k] == j) return 1;
+    }
+
     return 0;
 }
 
-// this function performs depth-first search 
-// starting at node i. break any tie based on 
-// node number (smaller node goes first) e.g., 
-// if you can pick node 2 or node 3, pick 2. 
-// at last, this function should return an array 
-// of size n holding the traverse sequence of nodes. 
-// (Assume input graph is always connected.)
+// DFT
 int* Graph::DFT(int i){
 
     // Create an array to store the traversal sequence
@@ -200,21 +209,21 @@ int* Graph::DFT(int i){
     while(!stack.empty()) {
         
         // Get the current vertex from the stack
-        int currentVertex = stack.top();
+        int current = stack.top();
         stack.pop();
 
-        //cout << "CURRENT VERTEX: " << currentVertex << endl;
+        //cout << "CURRENT VERTEX: " << current << endl;
 
         // Process the current vertex if not visited
-        if(!visited[currentVertex]) {
+        if(!visited[current]) {
             // Mark the current vertex as visted
-            visited[currentVertex] = true;
+            visited[current] = true;
             // Store the current vertex in the traversal sequence
-            traversalSequence[count++] = currentVertex;
+            traversalSequence[count++] = current;
 
             // Push adjacent vertecies onto the stack from largest to lowest
             for(int j = size - 1; j >= 0; j--){
-                if(m[currentVertex][j] != 0 && !visited[j]){
+                if(m[current][j] != 0 && !visited[j]){
                     stack.push(j);
                 }
             }
@@ -227,40 +236,133 @@ int* Graph::DFT(int i){
 }
 
 
-// this function performs breadth-first search 
-// starting at node i. when exploring neighbors 
-// of a set of nodes, explore them based on the 
-// order of nodes in the queue. 
-// 
-// this means once you pop a node from the queue, 
-// add its neighbors to the queue. (here, break 
-// ties based on neighbor node numbers -- smaller 
-// node gets added to the queue first)
-// 
-// at last, this function should return an array 
-// of size n holding the traverse sequence of nodes. 
+//BFT
 int* Graph::BFT(int i){
-    return NULL;
+    
+    // Create an array to store the traversal sequence
+    //cout << "CREATING TRAVERSAL SEQUENCE" << endl;
+    int* traversalSequence = new int[size];
+
+    // Create a boolean array to keep track of visited vertices
+    //cout << "CREATING VISITED ARRAY" << endl;
+    bool* visited = new bool[size];
+
+
+    // Initialize all vertices as not visited
+    //cout << "INITIALIZING VISITED ARRAY" << endl;
+    for(int k = 0; k < size; k++) {
+        visited[k] = false;
+    }
+
+    // Make queue
+    std::queue<int> q;  
+    q.push(i);
+    // Flag starting node i as visited 
+    visited[i] = true;
+
+    //cout << "CREATING COUNTER" << endl;
+    // Counter to keep track of the number of visited vertices
+    int count = 0;
+
+    while(!q.empty()){
+        // Get the front of the queue
+        int current = q.front(); 
+        // Pop
+        q.pop();
+        //Store current int traversalSequence
+        traversalSequence[count++] = current;
+
+        //Explore neighbors of the current node
+        for(int j = 0; j < size; j++){
+            //Check if there is an edge and the neighbor is not visited
+            if(m[current][j] != 0 && !visited[j]){
+                // Add the neighbor to the queue
+                q.push(j);
+                // Mark the neighbor as visited
+                visited[j] = true; 
+            }
+        }
+    }
+
+    delete[] visited;
+
+    return traversalSequence;
 }
 
-// 
-// The following performs the Dijkstra's algorithm
-// to find the shorest path from node i to node j.  
-// 
-// It returns address of an object of the 
-// Result class, which contains three 
-// public variables (see definition at top): 
-// (i) int length: length of the shorest path 
-// (ii) int weight: total weight of the shortest path
-// (iii) int *path: array of nodes on the path 
-// Example: 
-// If the shortest path is 2 -> 3 -> 0, and 
-// weight on (2,3) is 5 and weight on (3,0) is 1, 
-// then path[0] = 2, path[1] = 3, path[2] = 0
-// and length = 3 and weight = 6. 
-// 
+//Dijkstra
 Result* Graph::Dijkstra(int i, int j){
-    return NULL;
+
+    // Array to store the shortest distances
+    int* dist = new int[size];
+
+    // Array to store the shortest path
+    int* path = new int[size];
+
+    // Array to keep track of visited nodes
+    bool* visited = new bool[size];
+
+    for(int k = 0; k < size; k++){
+        dist[k] = INT_MAX; //Initialize distances to infinity
+        path[k] = -1; // Initialize path to -1 (indicating no path)
+        visited[k] = false; // Initialize all nodes as not visited
+    }
+
+    // Distance from source to self is 0
+    dist[i] = 0;
+
+    //Queue to store vertices
+    queue<int> q;
+
+    q.push(i);
+
+    while(!q.empty()){
+        // Find the vertex with the minimum distance in the current queue
+        int u = q.front();
+
+        for(int k = 0; k < size; k++){
+            if(!visited[k] && dist[k] < dist[u]){
+                u = i;
+            }
+        }
+
+        // Remove the vertex with the min distance from the queue
+        q.pop();
+
+        // Mark the current node as visited
+        visited[u] = true;
+
+        //Update the distance and path for each neighbor of u
+        for (int v = 0; v < size; ++v) {
+            if (!visited[v] && m[u][v] && dist[u] != INT_MAX && dist[u] + m[u][v] < dist[v]) {
+                dist[v] = dist[u] + m[u][v];
+                path[v] = u;
+                q.push(v);
+            }
+        }
+    }
+
+    // Build the path array
+    int pathLength = 0;
+    int current = j;
+    while (current != -1) {
+        current = path[current];
+        ++pathLength;
+    }
+
+    int* shortestPath = new int[pathLength];
+    current = j;
+    for (int i = pathLength - 1; i >= 0; --i) {
+        shortestPath[i] = current;
+        current = path[current];
+    }
+
+    Result* result = new Result(pathLength, dist[j], shortestPath);
+
+    delete[] dist;
+    delete[] path;
+    delete[] visited;
+
+    return result;
 }
 
 //Constructor
