@@ -179,40 +179,31 @@ int Graph::IsPath(int i, int j){
 int* Graph::DFT(int i){
 
     // Create an array to store the traversal sequence
-    //cout << "CREATING TRAVERSAL SEQUENCE" << endl;
     int* traversalSequence = new int[size];
 
     // Create a boolean array to keep track of visited vertices
-    //cout << "CREATING VISITED ARRAY" << endl;
     bool* visited = new bool[size];
 
     // Initialize all vertices as not visited
-    //cout << "INITIALIZING VISITED ARRAY" << endl;
     for(int k = 0; k < size; k++) {
         visited[k] = false;
     }
 
-    //cout << "CREATING STACK" << endl;
     // Create a stack for iterative traversal
     std::stack<int> stack;
 
-    //cout << "PUSHING I ONTO STACK" << endl;
     // Push the i onto the stack
     stack.push(i);
 
-    //cout << "CREATING COUNTER" << endl;
     // Counter to keep track of the number of visited vertices
     int count = 0;
 
-    //cout << "STARTING WHILE LOOP" << endl;
     // Iterative Depth-First Traversal using a stack
     while(!stack.empty()) {
         
         // Get the current vertex from the stack
         int current = stack.top();
         stack.pop();
-
-        //cout << "CURRENT VERTEX: " << current << endl;
 
         // Process the current vertex if not visited
         if(!visited[current]) {
@@ -240,16 +231,13 @@ int* Graph::DFT(int i){
 int* Graph::BFT(int i){
     
     // Create an array to store the traversal sequence
-    //cout << "CREATING TRAVERSAL SEQUENCE" << endl;
     int* traversalSequence = new int[size];
 
     // Create a boolean array to keep track of visited vertices
-    //cout << "CREATING VISITED ARRAY" << endl;
     bool* visited = new bool[size];
 
 
     // Initialize all vertices as not visited
-    //cout << "INITIALIZING VISITED ARRAY" << endl;
     for(int k = 0; k < size; k++) {
         visited[k] = false;
     }
@@ -260,7 +248,6 @@ int* Graph::BFT(int i){
     // Flag starting node i as visited 
     visited[i] = true;
 
-    //cout << "CREATING COUNTER" << endl;
     // Counter to keep track of the number of visited vertices
     int count = 0;
 
@@ -443,10 +430,6 @@ int main()
         for (int i = 0; i < z->length; i++) {
             cout << z->path[i];
         }
-    }
-    // Mode 6: test personal
-    else if (mode == 6) {
-
     }
 
     return 0;
